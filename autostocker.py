@@ -79,8 +79,8 @@ def modificate_stock(matriz):
     for i in range(long):
 
         try:
-            pos_change = i
             pos = matriz[i][0].index(code_modified)
+            pos_change = i
             code_founded = True
         except:
             continue
