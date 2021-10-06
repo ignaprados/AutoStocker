@@ -3,6 +3,7 @@ import time
 import datetime
 from datetime import datetime
 import os
+from termcolor import colored
 # Seccion carga de datos desde CSV (base de datos)
 """-----------------------------------------------------------------------------------------------------------------------"""
 matrixpandas = pandas.read_csv("matrix.csv")
@@ -24,7 +25,20 @@ def product_stock(matriz):
 
 # Consultar stock de un tipo de producto (type)
 def product_type(matriz):
-    pass
+    type_product = input("Ingrese la categoria de producto por el que desea filtrar: ")
+    a = len(matriz)
+    lista = list()
+    for i in range(a):
+        if (matriz[i][2]).upper() == (type_product).upper():
+            lista.append(matriz[i])
+    c = pandas.DataFrame(lista, columns=["code","name","type","stock","repos","last_update"])
+    os.system('CLS')
+    print(c)
+    print(" ")
+    decition = input("Cuando desee regresar al menú principal ingrese cualquier tecla: ")
+    os.system('CLS')
+    time.sleep(1)
+    
 
 def get_current_time():
     time_update = datetime.now()
@@ -39,7 +53,7 @@ def add_new_product(matriz):
     type_product = input("Ingresa la categoria del producto: ")
     stock = int(input("Ingresa el stock inicial del producto, puede ser 0: "))
     reposition = int(input("Punto de reposicion del producto: "))
-    new_product.append(code)
+    new_product.append(code.upper())
     new_product.append(name)
     new_product.append(type_product)
     new_product.append(stock)
@@ -73,7 +87,7 @@ def delete_product(matriz):
 
 def modificate_stock(matriz):
     long = len(matriz)
-    code_modified = input("Ingresa el codigo del producto que quieres modificar el stock: ")
+    code_modified = (input("Ingresa el codigo del producto que quieres modificar el stock: ")).upper()
     egressingress = (input("Desea aumentar o disminuir el stock?: ")).upper()
     code_founded = False
     for i in range(long):
@@ -106,11 +120,6 @@ def modificate_stock(matriz):
         matriz[pos_change][5] = get_current_time()
         print("El stock de "+ code_modified +" ha sido modificado")
 
-
-
-
-
-
 """-----------------------------------------------------------------------------------------------------------------------"""
 
 
@@ -120,24 +129,24 @@ def modificate_stock(matriz):
 # Seccion menu principal-programa
 """-----------------------------------------------------------------------------------------------------------------------"""
 print()
-print("Bienvenido a AutoStocker")
+print (colored("Bienvenido a AutoStocker", "blue",attrs=["bold","underline"]))
 date_update = datetime.now()
 now = date_update.strftime("%d/%m/%Y")
-print("Hoy es " + now)
+print (colored("Hoy es " + now, "white"))
 print()
 o = "INICIAR"
 
 while o != "CERRAR":
 
-    print("--- Menú Principal ---")
-    print("- 1. Imprimir Data")
-    print("- 2. Agregar Producto")
-    print("- 3. Eliminar Producto")
-    print("- 4. Modificar Stock")
-    print("- 5. Cerrar")
-    
+    print (colored("--- Menú Principal ---","blue",attrs=["bold"]))
+    print (colored("- 1.", "blue",attrs=["bold"]), "Imprimir Data")
+    print (colored("- 2.", "blue",attrs=["bold"]),"Agregar Producto")
+    print (colored("- 3.", "blue",attrs=["bold"]) ,"Eliminar Producto")
+    print(colored("- 4.", "blue",attrs=["bold"]) ,"Modificar Stock")
+    print(colored("- 5.", "blue",attrs=["bold"]),"Filtrar por categoria")
+    print(colored("- 6.", "blue",attrs=["bold"]) ,"Cerrar")
     o = (input("> Ingrese una opcion: ")).upper()
-    if o == "CERRAR" or o == "5":
+    if o == "CERRAR" or o == "6":
         print("Guardando datos en la base de datos...")
         df = pandas.DataFrame(matriz)
         df.to_csv("./matrix.csv", sep=',',index=False)
@@ -153,4 +162,6 @@ while o != "CERRAR":
         delete_product(matriz)
     elif o == "MODIFICAR STOCK" or o == "4":
         modificate_stock(matriz)
+    elif o == "FILTRAR CATEGORIA" or o == "5":
+        product_type(matriz)
 """-----------------------------------------------------------------------------------------------------------------------"""
