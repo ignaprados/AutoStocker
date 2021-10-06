@@ -2,6 +2,7 @@ import pandas
 import time
 import datetime
 from datetime import datetime
+import os
 # Seccion carga de datos desde CSV (base de datos)
 """-----------------------------------------------------------------------------------------------------------------------"""
 matrixpandas = pandas.read_csv("matrix.csv")
@@ -25,6 +26,11 @@ def product_stock(matriz):
 def product_type(matriz):
     pass
 
+def get_current_time():
+    time_update = datetime.now()
+    now = time_update.strftime("%d/%m/%Y %H:%M:%S")
+    return now
+
 # Agregar nuevo producto, su stock inicial y demas
 def add_new_product(matriz):
     new_product = list()
@@ -33,17 +39,18 @@ def add_new_product(matriz):
     type_product = input("Ingresa la categoria del producto: ")
     stock = int(input("Ingresa el stock inicial del producto, puede ser 0: "))
     reposition = int(input("Punto de reposicion del producto: "))
-    time_update = datetime.now()
-    dt_string = time_update.strftime("%d/%m/%Y %H:%M:%S")
     new_product.append(code)
     new_product.append(name)
     new_product.append(type_product)
     new_product.append(stock)
     new_product.append(reposition)
-    new_product.append(dt_string)
+    new_product.append(get_current_time())
     matriz.append(new_product)
+    print("El producto "+ code +" fue agregado")
+    time.sleep(2)
+    os.system('CLS')
 
-    
+
 def delete_product(matriz):
     long = len(matriz)
     eliminated = False
@@ -85,6 +92,8 @@ def modificate_stock(matriz):
         suma = actual_stock + increase
         suma = str(suma)
         matriz[pos_change][3] = suma
+        matriz[pos_change][5] = get_current_time()
+        print("El stock de "+ code_modified +" ha sido modificado")
     
     elif egressingress == "DISMINUIR" and code_founded == True:
         actual_stock = int(matriz[pos_change][3])
@@ -94,6 +103,8 @@ def modificate_stock(matriz):
         resta = actual_stock - decrease
         resta = str(resta)
         matriz[pos_change][3] = resta
+        matriz[pos_change][5] = get_current_time()
+        print("El stock de "+ code_modified +" ha sido modificado")
 
 
 
@@ -108,12 +119,25 @@ def modificate_stock(matriz):
 
 # Seccion menu principal-programa
 """-----------------------------------------------------------------------------------------------------------------------"""
-
+print()
+print("Bienvenido a AutoStocker")
+date_update = datetime.now()
+now = date_update.strftime("%d/%m/%Y")
+print("Hoy es " + now)
+print()
 o = "INICIAR"
 
 while o != "CERRAR":
-    o = (input("Inicie la operacion que desea realizar: ")).upper()
-    if o == "CERRAR":
+
+    print("--- Menú Principal ---")
+    print("- 1. Imprimir Data")
+    print("- 2. Agregar Producto")
+    print("- 3. Eliminar Producto")
+    print("- 4. Modificar Stock")
+    print("- 5. Cerrar")
+    
+    o = (input("> Ingrese una opcion: ")).upper()
+    if o == "CERRAR" or 5:
         print("Guardando datos en la base de datos...")
         df = pandas.DataFrame(matriz)
         df.to_csv("./matrix.csv", sep=',',index=False)
@@ -121,12 +145,12 @@ while o != "CERRAR":
         time.sleep(1)
         print("Cerrando AutoStocker...")
         time.sleep(1)
-    elif o == "PRINT_DATA":
+    elif o == "PRINT_DATA" or 1:
         print_data(matriz)
-    elif o == "AGREGAR PRODUCTO":
+    elif o == "AGREGAR PRODUCTO" or 2:
         add_new_product(matriz)
-    elif o == "ELIMINAR PRODUCTO":
+    elif o == "ELIMINAR PRODUCTO" or 3:
         delete_product(matriz)
-    elif o == "MODIFICAR STOCK":
+    elif o == "MODIFICAR STOCK" or 4:
         modificate_stock(matriz)
 """-----------------------------------------------------------------------------------------------------------------------"""
