@@ -57,9 +57,9 @@ def delete_product(matriz):
     code_eliminate = input("Ingresa el codigo del producto que quieres eliminar: ")
     for i in range(long):
         try:
+            pos = matriz[i][0].index(code_eliminate)
             name1 = matriz[i][1]
             print("El producto ", name1, " fue encontrado, eliminando...")
-            pos = matriz[i][0].index(code_eliminate)
             matriz.pop(i)
             time.sleep(1)
             print("El producto fue eliminado")
@@ -137,7 +137,7 @@ while o != "CERRAR":
     print("- 5. Cerrar")
     
     o = (input("> Ingrese una opcion: ")).upper()
-    if o == "CERRAR" or 5:
+    if o == "CERRAR" or o == "5":
         print("Guardando datos en la base de datos...")
         df = pandas.DataFrame(matriz)
         df.to_csv("./matrix.csv", sep=',',index=False)
@@ -145,12 +145,12 @@ while o != "CERRAR":
         time.sleep(1)
         print("Cerrando AutoStocker...")
         time.sleep(1)
-    elif o == "PRINT_DATA" or 1:
+    elif o == "PRINT_DATA" or o == "1":
         print_data(matriz)
-    elif o == "AGREGAR PRODUCTO" or 2:
+    elif o == "AGREGAR PRODUCTO" or o == "2":
         add_new_product(matriz)
-    elif o == "ELIMINAR PRODUCTO" or 3:
+    elif o == "ELIMINAR PRODUCTO" or o == "3":
         delete_product(matriz)
-    elif o == "MODIFICAR STOCK" or 4:
+    elif o == "MODIFICAR STOCK" or o == "4":
         modificate_stock(matriz)
 """-----------------------------------------------------------------------------------------------------------------------"""
