@@ -1,4 +1,3 @@
-
 import pandas
 import time
 import datetime
@@ -45,11 +44,59 @@ def add_new_product(matriz):
     matriz.append(new_product)
 
     
+def delete_product(matriz):
+    long = len(matriz)
+    eliminated = False
+    code_eliminate = input("Ingresa el codigo del producto que quieres eliminar: ")
+    for i in range(long):
+        try:
+            name1 = matriz[i][1]
+            print("El producto ", name1, " fue encontrado, eliminando...")
+            pos = matriz[i][0].index(code_eliminate)
+            matriz.pop(i)
+            time.sleep(1)
+            print("El producto fue eliminado")
+            eliminated = True
+
+        except:
+            continue
+    if eliminated == False:
+        print("El codigo no es correcto")
 
 
+def modificate_stock(matriz):
+    long = len(matriz)
+    code_modified = input("Ingresa el codigo del producto que quieres modificar el stock: ")
+    egressingress = (input("Desea aumentar o disminuir el stock?: ")).upper()
+    code_founded = False
+    for i in range(long):
 
-
+        try:
+            pos_change = i
+            pos = matriz[i][0].index(code_modified)
+            code_founded = True
+        except:
+            continue
+    if egressingress == "AUMENTAR" and code_founded == True:
+        actual_stock = int(matriz[pos_change][3])
+        print("El stock actual del producto es: ", actual_stock)
+        time.sleep(1)
+        increase = int(input("Cuanto stock desea agregar al stock del producto: "))
+        suma = actual_stock + increase
+        suma = str(suma)
+        matriz[pos_change][3] = suma
     
+    elif egressingress == "DISMINUIR" and code_founded == True:
+        actual_stock = int(matriz[pos_change][3])
+        print("El stock actual del producto es: ", actual_stock)
+        time.sleep(1)
+        decrease = int(input("Cuanto stock desea disminuir al stock del producto: "))
+        resta = actual_stock - decrease
+        resta = str(resta)
+        matriz[pos_change][3] = resta
+
+
+
 
 
 
@@ -78,4 +125,8 @@ while o != "CERRAR":
         print_data(matriz)
     elif o == "AGREGAR PRODUCTO":
         add_new_product(matriz)
+    elif o == "ELIMINAR PRODUCTO":
+        delete_product(matriz)
+    elif o == "MODIFICAR STOCK":
+        modificate_stock(matriz)
 """-----------------------------------------------------------------------------------------------------------------------"""
