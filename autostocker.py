@@ -31,8 +31,25 @@ def print_data(matriz):
 
 # Consultar stock de un producto en particular
 def product_stock(matriz):
-    pass
+    os.system("CLS")
+    founded = False
+    stock = (input("Ingrese el nombre del producto a consultar stock: ")).upper()
+    for i in range(len(matriz)):
+        
+        if stock == matriz[i][0]:
+            print("El stock actual del producto ",stock,"es: ",matriz[i][3])
+            founded = True
+        
+    
+    if founded == False:
+        print("No se encontro el codigo")
+    
+    time.sleep(3)
+    os.system("CLS")
+        
+    
 
+    
 # Consultar stock de un tipo de producto (type)
 def product_type(matriz):
     type_product = input("Ingrese la categoria de producto por el que desea filtrar: ")
@@ -212,9 +229,10 @@ while o != "CERRAR":
     print (colored("- 3.", "blue",attrs=["bold"]) ,"Eliminar Producto")
     print(colored("- 4.", "blue",attrs=["bold"]) ,"Modificar Stock")
     print(colored("- 5.", "blue",attrs=["bold"]),"Filtrar por categoria")
-    print(colored("- 6.", "blue",attrs=["bold"]) ,"Cerrar")
+    print(colored("- 6.", "blue",attrs=["bold"]) ,"Consultar stock del producto")
+    print(colored("- 7.", "blue",attrs=["bold"]) ,"Cerrar")
     o = (input("> Ingrese una opcion: ")).upper()
-    if o == "CERRAR" or o == "6":
+    if o == "CERRAR" or o == "7":
         print("Guardando datos en la base de datos...")
         df = pandas.DataFrame(matriz)
         df.to_csv("./matrix.csv", sep=',',index=False)
@@ -232,8 +250,11 @@ while o != "CERRAR":
         modificate_stock(matriz)
     elif o == "FILTRAR CATEGORIA" or o == "5":
         product_type(matriz)
+    elif o == "CONSULTAR STOCK" or o == "6":
+        product_stock(matriz)
     else:
         print("No has ingresado un comando valido")
         time.sleep(1)
         os.system("CLS")
+    
 """-----------------------------------------------------------------------------------------------------------------------"""
