@@ -16,17 +16,21 @@ matriz = matrixpandas.values.tolist()
 
 # Seccion de funciones
 """-----------------------------------------------------------------------------------------------------------------------"""
-#Imprime la matriz que contiene la data
+# Imprime la matriz que contiene la data
+
+
 def print_data(matriz):
     os.system('CLS')
-    print_matriz = pandas.DataFrame(matriz, columns=["code","name","type","stock","repos","last_update"])
+    print_matriz = pandas.DataFrame(
+        matriz, columns=["code", "name", "type", "stock", "repos", "last_update"])
     print("Imprimiendo matriz de datos...")
     time.sleep(1)
     print(print_matriz)
     print(" ")
-    decition = input("Cuando desee regresar al menú principal ingrese cualquier tecla: ")
-    time.sleep(1)
+    decition = input(
+        "Cuando desee regresar al menú principal ingrese cualquier tecla: ")
     os.system('CLS')
+    time.sleep(1)
 
 
 # Consultar stock de un producto en particular
@@ -34,38 +38,52 @@ def product_stock(matriz):
     os.system("CLS")
     founded = False
     stock = (input("Ingrese el nombre del producto a consultar stock: ")).upper()
+    os.system('CLS')
     for i in range(len(matriz)):
-        
+
         if stock == matriz[i][0]:
-            print("El stock actual del producto ",stock,"es: ",matriz[i][3])
+            print("El stock actual del producto ", stock, "es: ", matriz[i][3])
             founded = True
-        
-    
+            input("Ingrese cualquier tecla cuando desee volver al menu principal: ")
+            time.sleep(1)
+            os.system("CLS")
+
     if founded == False:
         print("No se encontro el codigo")
-    
-    time.sleep(3)
-    os.system("CLS")
-        
-    
+        time.sleep(1)
+        os.system("CLS")
+        print(colored("- 1.", "blue", attrs=["bold"]), "Volver a intentar ")
+        print(colored("- 2.", "blue",
+                      attrs=["bold"]), "Volver al menú principal")
+        choose = (input("Ingrese una opción: ")).upper()
 
-    
+        if choose == "1":
+            product_stock(matriz)
+
+        elif choose == "2":
+            time.sleep(1)
+            os.system("CLS")
+
+
 # Consultar stock de un tipo de producto (type)
 def product_type(matriz):
-    type_product = input("Ingrese la categoria de producto por el que desea filtrar: ")
+    type_product = input(
+        "Ingrese la categoria de producto por el que desea filtrar: ")
     a = len(matriz)
     lista = list()
     for i in range(a):
         if (matriz[i][2]).upper() == (type_product).upper():
             lista.append(matriz[i])
-    c = pandas.DataFrame(lista, columns=["code","name","type","stock","repos","last_update"])
+    c = pandas.DataFrame(
+        lista, columns=["code", "name", "type", "stock", "repos", "last_update"])
     os.system('CLS')
     print(c)
     print(" ")
-    decition = input("Cuando desee regresar al menú principal ingrese cualquier tecla: ")
+    decition = input(
+        "Cuando desee regresar al menú principal ingrese cualquier tecla: ")
     os.system('CLS')
     time.sleep(1)
-    
+
 
 def get_current_time():
     time_update = datetime.now()
@@ -73,6 +91,8 @@ def get_current_time():
     return now
 
 # Agregar nuevo producto, su stock inicial y demas
+
+
 def add_new_product(matriz):
     new_product = list()
     code = input("Ingresa el codigo del producto que desea agregar: ")
@@ -87,17 +107,18 @@ def add_new_product(matriz):
     new_product.append(reposition)
     new_product.append(get_current_time())
     matriz.append(new_product)
-    print("El producto "+ code +" fue agregado")
+    print("El producto " + code + " fue agregado")
     time.sleep(2)
     os.system('CLS')
     df = pandas.DataFrame(matriz)
-    df.to_csv("./matrix.csv", sep=',',index=False)
+    df.to_csv("./matrix.csv", sep=',', index=False)
 
 
 def delete_product(matriz):
     long = len(matriz)
     eliminated = False
-    code_eliminate = input("Ingresa el codigo del producto que quieres eliminar: ")
+    code_eliminate = input(
+        "Ingresa el codigo del producto que quieres eliminar: ")
     for i in range(long):
         try:
             pos = matriz[i][0].index(code_eliminate)
@@ -113,15 +134,16 @@ def delete_product(matriz):
     if eliminated == False:
         print("El codigo no es correcto")
     df = pandas.DataFrame(matriz)
-    df.to_csv("./matrix.csv", sep=',',index=False)
+    df.to_csv("./matrix.csv", sep=',', index=False)
+
 
 def modificate_stock(matriz):
     time.sleep(0.5)
     long = len(matriz)
     os.system("CLS")
-    code_modified = (input("Ingresa el codigo del producto que quieres modificar el stock: ")).upper()
-    
-    
+    code_modified = (
+        input("Ingresa el codigo del producto que quieres modificar el stock: ")).upper()
+
     os.system("CLS")
     code_founded = False
     for i in range(long):
@@ -136,44 +158,50 @@ def modificate_stock(matriz):
 
         except:
             continue
-    print (colored("- 1.", "blue",attrs=["bold"]), "Aumentar stock")
-    print (colored("- 2.", "blue",attrs=["bold"]),"Disminuir stock")
+    print(colored("- 1.", "blue", attrs=["bold"]), "Aumentar stock")
+    print(colored("- 2.", "blue", attrs=["bold"]), "Disminuir stock")
     egressingress = (input("Ingrese una opción: ")).upper()
     os.system("CLS")
     if egressingress == "1" and code_founded == True or egressingress == "AUMENTAR" and code_founded == True:
         actual_stock = int(matriz[pos_change][3])
         time.sleep(1)
         print(f"El stock actual de {code_modified} es: ", actual_stock)
-        increase = int(input(f"Cuanto stock desea agregar al stock de {code_modified}: "))
+        increase = int(
+            input(f"Cuanto stock desea agregar al stock de {code_modified}: "))
         suma = actual_stock + increase
         suma = str(suma)
         matriz[pos_change][3] = suma
         matriz[pos_change][5] = get_current_time()
         df = pandas.DataFrame(matriz)
-        df.to_csv("./matrix.csv", sep=',',index=False)
+        df.to_csv("./matrix.csv", sep=',', index=False)
         time.sleep(2)
-    
-        print(f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")
+
+        print(
+            f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")
         os.system("CLS")
     elif egressingress == "2" and code_founded == True or egressingress == "DISMINUIR" and code_founded == True:
         actual_stock = int(matriz[pos_change][3])
-        print(f"El stock actual de {code_modified} producto es: ", actual_stock)
+        print(
+            f"El stock actual de {code_modified} producto es: ", actual_stock)
         time.sleep(1)
-        decrease = int(input(f"Cuanto stock desea restar al stock de {code_modified}: "))
+        decrease = int(
+            input(f"Cuanto stock desea restar al stock de {code_modified}: "))
         resta = actual_stock - decrease
         resta = str(resta)
         matriz[pos_change][3] = resta
         matriz[pos_change][5] = get_current_time()
-        print(f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")
+        print(
+            f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")
         df = pandas.DataFrame(matriz)
-        df.to_csv("./matrix.csv", sep=',',index=False)
+        df.to_csv("./matrix.csv", sep=',', index=False)
         time.sleep(2)
         os.system("CLS")
-    
+
     elif code_founded == False:
         print(f"El codigo {code_modified} no se encontro")
-        print (colored("- 1.", "blue",attrs=["bold"]), "Volver a intentar")
-        print (colored("- 2.", "blue",attrs=["bold"]),"Volver al menu principal")
+        print(colored("- 1.", "blue", attrs=["bold"]), "Volver a intentar")
+        print(colored("- 2.", "blue",
+                      attrs=["bold"]), "Volver al menu principal")
         choose = (input("Ingrese una opción: ")).upper()
 
         if choose == "1":
@@ -188,8 +216,9 @@ def modificate_stock(matriz):
             os.system("CLS")
     else:
         print("Usted no ingreso una opcion correcta")
-        print (colored("- 1.", "blue",attrs=["bold"]), "Volver a intentar")
-        print (colored("- 2.", "blue",attrs=["bold"]),"Volver al menu principal")
+        print(colored("- 1.", "blue", attrs=["bold"]), "Volver a intentar")
+        print(colored("- 2.", "blue",
+                      attrs=["bold"]), "Volver al menu principal")
         choose = (input("Ingrese una opción: ")).upper()
         if choose == "1":
             modificate_stock(matriz)
@@ -202,40 +231,36 @@ def modificate_stock(matriz):
             time.sleep(1)
             os.system("CLS")
 
-       
-        
+
 """-----------------------------------------------------------------------------------------------------------------------"""
-    
-
-
-
 
 
 # Seccion menu principal-programa
 """-----------------------------------------------------------------------------------------------------------------------"""
 print()
-print (colored("Bienvenido a AutoStocker", "blue",attrs=["bold","underline"]))
+print(colored("Bienvenido a AutoStocker", "blue", attrs=["bold", "underline"]))
 date_update = datetime.now()
 now = date_update.strftime("%d/%m/%Y")
-print (colored("Hoy es " + now, "white"))
+print(colored("Hoy es " + now, "white"))
 print()
 o = "INICIAR"
 
 while o != "CERRAR":
 
-    print (colored("--- Menú Principal ---","blue",attrs=["bold"]))
-    print (colored("- 1.", "blue",attrs=["bold"]), "Imprimir Data")
-    print (colored("- 2.", "blue",attrs=["bold"]),"Agregar Producto")
-    print (colored("- 3.", "blue",attrs=["bold"]) ,"Eliminar Producto")
-    print(colored("- 4.", "blue",attrs=["bold"]) ,"Modificar Stock")
-    print(colored("- 5.", "blue",attrs=["bold"]),"Filtrar por categoria")
-    print(colored("- 6.", "blue",attrs=["bold"]) ,"Consultar stock del producto")
-    print(colored("- 7.", "blue",attrs=["bold"]) ,"Cerrar")
+    print(colored("--- Menú Principal ---", "blue", attrs=["bold"]))
+    print(colored("- 1.", "blue", attrs=["bold"]), "Imprimir Data")
+    print(colored("- 2.", "blue", attrs=["bold"]), "Agregar Producto")
+    print(colored("- 3.", "blue", attrs=["bold"]), "Eliminar Producto")
+    print(colored("- 4.", "blue", attrs=["bold"]), "Modificar Stock")
+    print(colored("- 5.", "blue", attrs=["bold"]), "Filtrar por categoria")
+    print(colored("- 6.", "blue", attrs=["bold"]),
+          "Consultar stock del producto")
+    print(colored("- 7.", "blue", attrs=["bold"]), "Cerrar")
     o = (input("> Ingrese una opcion: ")).upper()
     if o == "CERRAR" or o == "7":
         print("Guardando datos en la base de datos...")
         df = pandas.DataFrame(matriz)
-        df.to_csv("./matrix.csv", sep=',',index=False)
+        df.to_csv("./matrix.csv", sep=',', index=False)
 
         time.sleep(1)
         print("Cerrando AutoStocker...")
@@ -256,5 +281,5 @@ while o != "CERRAR":
         print("No has ingresado un comando valido")
         time.sleep(1)
         os.system("CLS")
-    
+
 """-----------------------------------------------------------------------------------------------------------------------"""
