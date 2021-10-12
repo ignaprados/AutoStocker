@@ -160,6 +160,8 @@ def modificate_stock(matriz):
             continue
     print(colored("- 1.", "blue", attrs=["bold"]), "Aumentar stock")
     print(colored("- 2.", "blue", attrs=["bold"]), "Disminuir stock")
+    print(colored("- 3.", "blue", attrs=["bold"]),
+          "Ajuste por perdida de stock")
     egressingress = (input("Ingrese una opción: ")).upper()
     os.system("CLS")
     if egressingress == "1" and code_founded == True or egressingress == "AUMENTAR" and code_founded == True:
@@ -196,6 +198,35 @@ def modificate_stock(matriz):
         df.to_csv("./matrix.csv", sep=',', index=False)
         time.sleep(2)
         os.system("CLS")
+
+    elif egressingress == "3" and code_founded == True:
+        actual_stock = int(matriz[pos_change][3])
+        print(
+            f"El stock actual de {code_modified} producto es: ", actual_stock)
+        time.sleep(1)
+        ajustar = int(input(f"Cuanto stock se extravio de {code_modified}: "))
+        os.system("CLS")
+        print("Vamos a modificar el stock restando lo que se perdio, y lo que tiene que volver a enviar al cliente. ¿Es usteded consiente?")
+        print(colored("- 1.", "blue", attrs=["bold"]), "Si")
+        print(colored("- 2.", "blue", attrs=["bold"]), "No")
+        choose = (input("Ingrese una opción: ")).upper()
+
+        if choose == "1":
+            mod = actual_stock - (ajustar+ajustar)
+            mod = str(mod)
+            matriz[pos_change][3] = mod
+            os.system("CLS")
+
+            print(
+                f"Ahora el stock de {code_modified} es: ", (matriz[pos_change][3]))
+
+            print(f"Ajuste de {code_modified} realizado con exito")
+            time.sleep(1)
+            os.system("CLS")
+        elif choose == "2":
+            print("Cancelando...")
+            time.sleep(1)
+            os.system("CLS")
 
     elif code_founded == False:
         print(f"El codigo {code_modified} no se encontro")
