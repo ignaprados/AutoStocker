@@ -11,6 +11,8 @@ os.system('CLS')
 """-----------------------------------------------------------------------------------------------------------------------"""
 matrixpandas = pandas.read_csv("matrix.csv")
 matriz = matrixpandas.values.tolist()
+registros = pandas.read_csv("registros.csv")
+registros = registros.values.tolist()
 """-----------------------------------------------------------------------------------------------------------------------"""
 
 
@@ -22,7 +24,7 @@ matriz = matrixpandas.values.tolist()
 def print_data(matriz):
     os.system('CLS')
     print_matriz = pandas.DataFrame(
-        matriz, columns=["code", "name", "type", "stock", "repos", "last_update"])
+        matriz, columns=["code", "name", "type", "price", "stock", "repos", "last_update"])
     print("Imprimiendo matriz de datos...")
     time.sleep(1)
     print(print_matriz)
@@ -33,7 +35,20 @@ def print_data(matriz):
     time.sleep(1)
 
 
+def print_registros(registros):
+    print_registros = pandas.DataFrame(
+        registros, columns=["code", "variacion", "motivo", "timestamp"])
+    print("Imprimiendo matriz de datos...")
+    time.sleep(1)
+    print(print_registros)
+    print(" ")
+    decition = input(
+        "Cuando desee regresar al menú principal ingrese cualquier tecla: ")
+    os.system('CLS')
+    time.sleep(1)
 # Consultar stock de un producto en particular
+
+
 def product_stock(matriz):
     os.system("CLS")
     founded = False
@@ -98,11 +113,13 @@ def add_new_product(matriz):
     code = input("Ingresa el codigo del producto que desea agregar: ")
     name = input("Ingresa el nombre del producto que va a agregar: ")
     type_product = input("Ingresa la categoria del producto: ")
+    price = input("Ingresa el precio del producto: ")
     stock = int(input("Ingresa el stock inicial del producto, puede ser 0: "))
     reposition = int(input("Punto de reposicion del producto: "))
     new_product.append(code.upper())
     new_product.append(name)
     new_product.append(type_product)
+    new_product.append(price)
     new_product.append(stock)
     new_product.append(reposition)
     new_product.append(get_current_time())
@@ -205,6 +222,7 @@ def modificate_stock(matriz):
             f"El stock actual de {code_modified} producto es: ", actual_stock)
         time.sleep(1)
         ajustar = int(input(f"Cuanto stock se extravio de {code_modified}: "))
+        motivo = input("Motivo del ajuste")
         os.system("CLS")
         print("Vamos a modificar el stock restando lo que se perdio, y lo que tiene que volver a enviar al cliente. ¿Es usteded consiente?")
         print(colored("- 1.", "blue", attrs=["bold"]), "Si")
@@ -263,6 +281,81 @@ def modificate_stock(matriz):
             os.system("CLS")
 
 
+def update_product(matriz):
+    os.system("CLS")
+    code = (input("Ingrese el codigo del producto que quiere modificar: ")).upper()
+    founded = False
+    long = len(matriz)
+    try:
+        for i in range(long):
+            if code == matriz[i][0]:
+                print(" ")
+                print(f"El producto {matriz[i][1]} fue encontrado")
+                pos = i
+                founded = True
+                time.sleep(1)
+                os.system("CLS")
+
+    except:
+        print("El codigo no es correcto")
+        update_product(matriz)
+
+    if founded == True:
+        print(" ")
+        print(colored("- 1.", "blue", attrs=["bold"]), "Modificar nombre")
+        print(colored("- 2.", "blue", attrs=["bold"]), "Modificar precio")
+        print(colored("- 3.", "blue", attrs=["bold"]), "Modificar stock")
+        print(colored("- 4.", "blue", attrs=["bold"]), "Modificar codigo")
+        print(colored("- 5.", "blue", attrs=["bold"]), "Modificar categoria")
+        print(colored("- 6.", "blue",
+                      attrs=["bold"]), "Modificar punto de reposicion")
+        print(" ")
+        choose = input("Ingrese una opcion: ")
+        time.sleep(1)
+        os.system("CLS")
+        if choose == "1":
+            name = input("Ingrese el nuevo nombre: ")
+            matriz[pos][1] = name
+            print(" ")
+            print("El nombre del producto fue modificado")
+            print(" ")
+            update_product(matriz)
+        elif choose == "2":
+            price = input("Ingrese el nuevo precio: ")
+            matriz[pos][3] = price
+            print(" ")
+            print("El precio del producto fue modificado")
+            print(" ")
+            update_product(matriz)
+        elif choose == "3":
+            modificate_stock(matriz)
+        elif choose == "4":
+            code = input("Ingrese el nuevo codigo del producto: ")
+            matriz[pos][0] = code
+            print(" ")
+            print("El codigo del producto fue modificado")
+            print(" ")
+        elif choose == "5":
+            category = input("Ingrese la nueva categoria: ")
+            matriz[pos][2] = category
+            print(" ")
+            print("La categoria del producto fue modificada")
+            print(" ")
+            update_product(matriz)
+        elif choose == "6":
+            repos = input("Ingrese el nuevo punto de reposicion: ")
+            matriz[pos][4] = repos
+            print(" ")
+            print("El punto de reposicion del producto fue modificado")
+            print(" ")
+        os.system("CLS")
+    else:
+        print("El codigo no se encontro")
+        time.sleep(1.5)
+        os.system("CLS")
+        update_product(matriz)
+
+
 """-----------------------------------------------------------------------------------------------------------------------"""
 
 
@@ -282,7 +375,7 @@ while o != "CERRAR":
     print(colored("- 1.", "blue", attrs=["bold"]), "Imprimir Data")
     print(colored("- 2.", "blue", attrs=["bold"]), "Agregar Producto")
     print(colored("- 3.", "blue", attrs=["bold"]), "Eliminar Producto")
-    print(colored("- 4.", "blue", attrs=["bold"]), "Modificar Stock")
+    print(colored("- 4.", "blue", attrs=["bold"]), "Modificar producto")
     print(colored("- 5.", "blue", attrs=["bold"]), "Filtrar por categoria")
     print(colored("- 6.", "blue", attrs=["bold"]),
           "Consultar stock del producto")
@@ -302,8 +395,8 @@ while o != "CERRAR":
         add_new_product(matriz)
     elif o == "ELIMINAR PRODUCTO" or o == "3":
         delete_product(matriz)
-    elif o == "MODIFICAR STOCK" or o == "4":
-        modificate_stock(matriz)
+    elif o == "MODIFICAR PRODUCTO" or o == "4":
+        update_product(matriz)
     elif o == "FILTRAR CATEGORIA" or o == "5":
         product_type(matriz)
     elif o == "CONSULTAR STOCK" or o == "6":
