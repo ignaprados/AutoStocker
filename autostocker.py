@@ -4,14 +4,15 @@ import datetime
 from datetime import datetime
 import os
 from termcolor import colored
-
+import sqlite3
 os.system('CLS')
 
 # Seccion carga de datos desde CSV (base de datos)
 """-----------------------------------------------------------------------------------------------------------------------"""
-matrixpandas = pandas.read_csv("matrix.csv")
+conn = sqlite3.connect('./database.db')
+matrixpandas = pandas.read_sql_query("SELECT * FROM productos", conn)
 matriz = matrixpandas.values.tolist()
-registros = pandas.read_csv("registros.csv")
+registros = pandas.read_sql_query("SELECT * FROM registros", conn)
 registros = registros.values.tolist()
 """-----------------------------------------------------------------------------------------------------------------------"""
 
@@ -24,7 +25,7 @@ registros = registros.values.tolist()
 def print_data(matriz):
     os.system('CLS')
     print_matriz = pandas.DataFrame(
-        matriz, columns=["code", "name", "type", "price", "stock", "repos", "last_update"])
+        matriz, columns=["code", "name", "type", "stock", "repos", "last_update", "price"])
     print("Imprimiendo matriz de datos...")
     time.sleep(1)
     print(print_matriz)
@@ -128,7 +129,7 @@ def add_new_product(matriz):
     time.sleep(2)
     os.system('CLS')
     df = pandas.DataFrame(matriz)
-    df.to_csv("./matrix.csv", sep=',', index=False)
+    df.to_sql('productos', conn, if_exists='replace', index=False)
 
 
 def delete_product(matriz):
@@ -151,7 +152,7 @@ def delete_product(matriz):
     if eliminated == False:
         print("El codigo no es correcto")
     df = pandas.DataFrame(matriz)
-    df.to_csv("./matrix.csv", sep=',', index=False)
+    df.to_sql('productos', conn, if_exists='replace', index=False)
 
 
 def modificate_stock(matriz):
@@ -192,7 +193,7 @@ def modificate_stock(matriz):
         matriz[pos_change][3] = suma
         matriz[pos_change][5] = get_current_time()
         df = pandas.DataFrame(matriz)
-        df.to_csv("./matrix.csv", sep=',', index=False)
+        df.to_sql('productos', conn, if_exists='replace', index=False)
         time.sleep(2)
 
         print(
@@ -212,7 +213,7 @@ def modificate_stock(matriz):
         print(
             f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")
         df = pandas.DataFrame(matriz)
-        df.to_csv("./matrix.csv", sep=',', index=False)
+        df.to_sql('productos', conn, if_exists='replace', index=False)
         time.sleep(2)
         os.system("CLS")
 
@@ -222,7 +223,7 @@ def modificate_stock(matriz):
             f"El stock actual de {code_modified} producto es: ", actual_stock)
         time.sleep(1)
         ajustar = int(input(f"Cuanto stock se extravio de {code_modified}: "))
-        motivo = input("Motivo del ajuste")
+        motivo = input("Motivo del ajuste: ")
         os.system("CLS")
         print("Vamos a modificar el stock restando lo que se perdio, y lo que tiene que volver a enviar al cliente. ¿Es usteded consiente?")
         print(colored("- 1.", "blue", attrs=["bold"]), "Si")
@@ -232,13 +233,19 @@ def modificate_stock(matriz):
         if choose == "1":
             mod = actual_stock - (ajustar+ajustar)
             mod = str(mod)
+            ajuste = "-"+str(ajustar+ajustar)
             matriz[pos_change][3] = mod
             os.system("CLS")
+            mod = "-" + mod
+            ajuste = [code_modified, ajuste, motivo, get_current_time()]
 
+            registros.append(ajuste)
             print(
                 f"Ahora el stock de {code_modified} es: ", (matriz[pos_change][3]))
 
             print(f"Ajuste de {code_modified} realizado con exito")
+            df = pandas.DataFrame(registros)
+            df.to_sql('registros', conn, if_exists='replace', index=False)
             time.sleep(1)
             os.system("CLS")
         elif choose == "2":
@@ -322,7 +329,7 @@ def update_product(matriz):
             update_product(matriz)
         elif choose == "2":
             price = input("Ingrese el nuevo precio: ")
-            matriz[pos][3] = price
+            matriz[pos][6] = price
             print(" ")
             print("El precio del producto fue modificado")
             print(" ")
@@ -380,11 +387,12 @@ while o != "CERRAR":
     print(colored("- 6.", "blue", attrs=["bold"]),
           "Consultar stock del producto")
     print(colored("- 7.", "blue", attrs=["bold"]), "Cerrar")
+    print(colored("- 8.", "blue", attrs=["bold"]), "Imprimir registros")
     o = (input("> Ingrese una opcion: ")).upper()
     if o == "CERRAR" or o == "7":
         print("Guardando datos en la base de datos...")
         df = pandas.DataFrame(matriz)
-        df.to_csv("./matrix.csv", sep=',', index=False)
+        df.to_sql('productos', conn, if_exists='replace', index=False)
 
         time.sleep(1)
         print("Cerrando AutoStocker...")
@@ -401,9 +409,12 @@ while o != "CERRAR":
         product_type(matriz)
     elif o == "CONSULTAR STOCK" or o == "6":
         product_stock(matriz)
+    elif o == "8":
+        print_registros(registros)
     else:
         print("No has ingresado un comando valido")
         time.sleep(1)
         os.system("CLS")
 
 """-----------------------------------------------------------------------------------------------------------------------"""
+conn.close()
