@@ -130,6 +130,13 @@ def add_new_product(matriz):
     os.system('CLS')
     df = pandas.DataFrame(matriz)
     df.to_sql('productos', conn, if_exists='replace', index=False)
+    ajuste = [code, "Se añadio un producto",
+              "Added product", get_current_time()]
+
+    registros.append(ajuste)
+
+    df = pandas.DataFrame(registros)
+    df.to_sql('registros', conn, if_exists='replace', index=False)
 
 
 def delete_product(matriz):
@@ -153,6 +160,14 @@ def delete_product(matriz):
         print("El codigo no es correcto")
     df = pandas.DataFrame(matriz)
     df.to_sql('productos', conn, if_exists='replace', index=False)
+    ajuste = "Se borro el producto"
+    motivo = "Producto eliminado"
+    ajuste = [code_eliminate, ajuste, motivo, get_current_time()]
+
+    registros.append(ajuste)
+
+    df = pandas.DataFrame(registros)
+    df.to_sql('registros', conn, if_exists='replace', index=False)
 
 
 def modificate_stock(matriz):
@@ -194,6 +209,14 @@ def modificate_stock(matriz):
         matriz[pos_change][5] = get_current_time()
         df = pandas.DataFrame(matriz)
         df.to_sql('productos', conn, if_exists='replace', index=False)
+        ajuste = "+" + str(increase)
+        motivo = "Ingreso de stock"
+        ajuste = [code_modified, ajuste, motivo, get_current_time()]
+
+        registros.append(ajuste)
+
+        df = pandas.DataFrame(registros)
+        df.to_sql('registros', conn, if_exists='replace', index=False)
         time.sleep(2)
 
         print(
@@ -214,6 +237,14 @@ def modificate_stock(matriz):
             f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")
         df = pandas.DataFrame(matriz)
         df.to_sql('productos', conn, if_exists='replace', index=False)
+        ajuste = "-" + str(decrease)
+        motivo = "Egreso de stock"
+        ajuste = [code_modified, ajuste, motivo, get_current_time()]
+
+        registros.append(ajuste)
+
+        df = pandas.DataFrame(registros)
+        df.to_sql('registros', conn, if_exists='replace', index=False)
         time.sleep(2)
         os.system("CLS")
 
@@ -327,6 +358,7 @@ def update_product(matriz):
             print("El nombre del producto fue modificado")
             print(" ")
             update_product(matriz)
+
         elif choose == "2":
             price = input("Ingrese el nuevo precio: ")
             matriz[pos][6] = price
