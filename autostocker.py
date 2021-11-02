@@ -93,7 +93,7 @@ def product_type(matriz):
         if (matriz[i][2]).upper() == (type_product).upper():                                    # si el tipo de producto es igual al tipo de producto capturado
             lista.append(matriz[i])                                                             # agregar el producto a la lista
     c = pandas.DataFrame(
-        lista, columns=["code", "name", "type", "stock", "repos", "last_update"])               # generar la matriz en formato pandas
+        lista, columns=["code", "name", "type", "stock", "repos", "last_update", "price"])      # generar la matriz en formato pandas
     os.system('CLS')                                                                            # limpiar la terminal
     print(c)                                                                                    # imprimir la matriz de productos
     print(" ")
@@ -412,7 +412,7 @@ print(colored("Hoy es " + now, "white"))                                        
 print()
 o = "INICIAR"                                                                                   # opcion iniciar
 
-while o != "CERRAR":                                                                            # mientras la opcion no sea cerrar
+while o != "7":                                                                            # mientras la opcion no sea cerrar
 
     print(colored("--- Menú Principal ---", "blue", attrs=["bold"]))                            # imprimir el menu principal
     print(colored("- 1.", "blue", attrs=["bold"]), "Imprimir Data")                             # opcion 1
