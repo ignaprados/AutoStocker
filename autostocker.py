@@ -26,7 +26,7 @@ registros = registros.values.tolist()                                           
 def print_data(matriz):
     os.system('CLS')
     print_matriz = pandas.DataFrame( 
-        matriz, columns=["code", "name", "type", "stock", "repos", "last_update", "price"])     # generar la matriz en formato pandas
+        matriz, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])     # generar la matriz en formato pandas
     print("Imprimiendo matriz de datos...")                                                     # mensaje de impresion
     time.sleep(1)                                                                               # esperar 1 segundo
     print(print_matriz)                                                                         # imprimir la matriz de stock
@@ -93,7 +93,7 @@ def product_type(matriz):
         if (matriz[i][2]).upper() == (type_product).upper():                                    # si el tipo de producto es igual al tipo de producto capturado
             lista.append(matriz[i])                                                             # agregar el producto a la lista
     c = pandas.DataFrame(
-        lista, columns=["code", "name", "type", "stock", "repos", "last_update", "price"])      # generar la matriz en formato pandas
+        lista, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])      # generar la matriz en formato pandas
     os.system('CLS')                                                                            # limpiar la terminal
     print(c)                                                                                    # imprimir la matriz de productos
     print(" ")
@@ -115,15 +115,15 @@ def add_new_product(matriz):
     code = input("Ingresa el codigo del producto que desea agregar: ")                          # capturar el codigo del producto
     name = input("Ingresa el nombre del producto que va a agregar: ")                           # capturar el nombre del producto
     type_product = input("Ingresa la categoria del producto: ")                                 # capturar el tipo de producto
-    price = input("Ingresa el precio del producto: ")                                           # capturar el precio del producto
     stock = int(input("Ingresa el stock inicial del producto, puede ser 0: "))                  # capturar el stock inicial del producto
     reposition = int(input("Punto de reposicion del producto: "))                               # capturar el punto de reposicion del producto
+    price = input("Ingresa el precio del producto: ")                                           # capturar el precio del producto
     new_product.append(code.upper())                                                            # agregar el codigo al nuevo producto
     new_product.append(name)                                                                    # agregar el nombre al nuevo producto
     new_product.append(type_product)                                                            # agregar el tipo de producto al nuevo producto
-    new_product.append(price)                                                                   # agregar el precio al nuevo producto
     new_product.append(stock)                                                                   # agregar el stock al nuevo producto
     new_product.append(reposition)                                                              # agregar el punto de reposicion al nuevo producto
+    new_product.append(price)                                                                   # agregar el precio al nuevo producto
     new_product.append(get_current_time())                                                      # agregar la fecha y hora actual al nuevo producto
     matriz.append(new_product)                                                                  # agregar el nuevo producto a la matriz
     print("El producto " + code + " fue agregado")                                              # mensaje de confirmacion
@@ -259,7 +259,7 @@ def modificate_stock(matriz):
         ajustar = int(input(f"Cuanto stock se extravio de {code_modified}: "))                  # capturar el stock a ajustar
         motivo = input("Motivo del ajuste: ")                                                   # capturar el motivo del ajuste
         os.system("CLS")                                                                                                                        # limpiar la terminal
-        print("Vamos a modificar el stock restando lo que se perdio, y lo que tiene que volver a enviar al cliente. ¿Es usteded consiente?")    # mensaje de confirmacion
+        print("Vamos a modificar el stock restando lo que se perdio, y lo que tiene que volver a enviar al cliente. ¿Es usted conciente?")      # mensaje de confirmacion
         print(colored("- 1.", "blue", attrs=["bold"]), "Si")                                                                                    # opcion si
         print(colored("- 2.", "blue", attrs=["bold"]), "No")                                                                                    # opcion no
         choose = (input("Ingrese una opción: ")).upper()                                                                                        # capturar la opcion
@@ -365,7 +365,7 @@ def update_product(matriz):
 
         elif choose == "2":                                                                     # si la opcion es 2
             price = input("Ingrese el nuevo precio: ")                                          # capturar el nuevo precio
-            matriz[pos][6] = price                                                              # cambiar el precio del producto
+            matriz[pos][5] = price                                                              # cambiar el precio del producto
             print(" ")
             print("El precio del producto fue modificado")                                      # mensaje de precio modificado
             print(" ")
