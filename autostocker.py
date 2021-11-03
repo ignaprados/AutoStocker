@@ -361,7 +361,6 @@ def update_product(matriz):
             print(" ")
             print("El nombre del producto fue modificado")                                      # mensaje de nombre modificado
             print(" ")
-            update_product(matriz)                                                              # llamar a la funcion update product
 
         elif choose == "2":                                                                     # si la opcion es 2
             price = input("Ingrese el nuevo precio: ")                                          # capturar el nuevo precio
@@ -369,7 +368,7 @@ def update_product(matriz):
             print(" ")
             print("El precio del producto fue modificado")                                      # mensaje de precio modificado
             print(" ")
-            update_product(matriz)                                                              # llamar a la funcion update product
+
         elif choose == "3":                                                                     # si la opcion es 3
             modificate_stock(matriz)                                                            # llamar a la funcion modificar stock
         elif choose == "4":                                                                     # si la opcion es 4
@@ -384,7 +383,7 @@ def update_product(matriz):
             print(" ")
             print("La categoria del producto fue modificada")                                   # mensaje de categoria modificada
             print(" ")
-            update_product(matriz)                                                              # llamar a la funcion update product
+
         elif choose == "6":                                                                     # si la opcion es 6
             repos = input("Ingrese el nuevo punto de reposicion: ")                             # capturar el nuevo punto de reposicion
             matriz[pos][4] = repos                                                              # cambiar el punto de reposicion del producto
