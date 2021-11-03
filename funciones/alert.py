@@ -7,8 +7,8 @@ def alert(matriz):
     for i in range(len(matriz)):                                                                                                # recorrer la matriz
         if int(matriz[i][3]) <= int(matriz[i][4]):                                                                              # si el stock es menor o igual al reposicion
             to_repos.append(matriz[i])                                                                                          # agregar el producto a la lista
-            to_repos = pandas.DataFrame(to_repos, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])   # generar la matriz en formato pandas
             codes_to_repos.append(matriz[i][0])                                                                                 # agregar el codigo del producto a la lista
+    to_repos = pandas.DataFrame(to_repos, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])           # generar la matriz en formato pandas
                
     if len(codes_to_repos) > 0:                                                                 # si hay productos a reponer
         print("Los codigos a reponer son: ")                                                    # mensaje de los codigos a reponer
