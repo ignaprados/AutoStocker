@@ -411,7 +411,7 @@ print(colored("Hoy es " + now, "white"))                                        
 print()
 o = "INICIAR"                                                                                   # opcion iniciar
 
-while o != "7":                                                                            # mientras la opcion no sea cerrar
+while o != "7":                                                                                 # mientras la opcion no sea cerrar
 
     print(colored("--- Menú Principal ---", "blue", attrs=["bold"]))                            # imprimir el menu principal
     print(colored("- 1.", "blue", attrs=["bold"]), "Imprimir Data")                             # opcion 1
