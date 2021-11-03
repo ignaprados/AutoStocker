@@ -26,7 +26,7 @@ registros = registros.values.tolist()                                           
 def print_data(matriz):
     os.system('CLS')
     print_matriz = pandas.DataFrame( 
-        matriz, columns=["code", "name", "type", "stock", "repos", "last_update", "price"])     # generar la matriz en formato pandas
+        matriz, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])     # generar la matriz en formato pandas
     print("Imprimiendo matriz de datos...")                                                     # mensaje de impresion
     time.sleep(1)                                                                               # esperar 1 segundo
     print(print_matriz)                                                                         # imprimir la matriz de stock
@@ -92,15 +92,31 @@ def product_type(matriz):
     for i in range(a):                                                                          # recorrer la matriz
         if (matriz[i][2]).upper() == (type_product).upper():                                    # si el tipo de producto es igual al tipo de producto capturado
             lista.append(matriz[i])                                                             # agregar el producto a la lista
-    c = pandas.DataFrame(
-        lista, columns=["code", "name", "type", "stock", "repos", "last_update"])               # generar la matriz en formato pandas
-    os.system('CLS')                                                                            # limpiar la terminal
-    print(c)                                                                                    # imprimir la matriz de productos
-    print(" ")
-    decition = input(
-        "Cuando desee regresar al menú principal ingrese cualquier tecla: ")                    # volver al menu principal
-    os.system('CLS')                                                                            # limpiar la terminal
-    time.sleep(1)                                                                               # esperar 1 segundo
+    if len(lista) != 0:                                                           
+        c = pandas.DataFrame(
+            lista, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])  # generar la matriz en formato pandas
+        os.system('CLS')                                                                        # limpiar la terminal
+        print(c)                                                                                # imprimir la matriz de productos
+        print(" ")
+        decition = input(
+            "Cuando desee regresar al menú principal ingrese cualquier tecla: ")                # volver al menu principal
+        os.system('CLS')                                                                        # limpiar la terminal
+        time.sleep(1)                                                                           # esperar 1 segundo
+    else:
+        print("No se encontraron productos con ese tipo")                                       # mensaje de error
+        time.sleep(1)                                                                           # esperar 1 segundo
+        os.system("CLS")                                                                        # limpiar la terminal
+        print(colored("- 1.", "blue", attrs=["bold"]), "Volver a intentar ")                    # mensaje de volver a intentar
+        print(colored("- 2.", "blue",
+                      attrs=["bold"]), "Volver al menú principal")                              # mensaje de volver al menu principal
+        choose = (input("Ingrese una opción: ")).upper()                                        # capturar la opcion
+
+        if choose == "1":                                                                       # si la opcion es 1
+            product_type(matriz)                                                                # volver a intentar
+
+        elif choose == "2":                                                                     # si la opcion es 2
+            time.sleep(1)                                                                       # esperar 1 segundo
+            os.system("CLS")                                                                    # limpiar la terminal                                                                               
 
 
 def get_current_time():
@@ -115,15 +131,15 @@ def add_new_product(matriz):
     code = input("Ingresa el codigo del producto que desea agregar: ")                          # capturar el codigo del producto
     name = input("Ingresa el nombre del producto que va a agregar: ")                           # capturar el nombre del producto
     type_product = input("Ingresa la categoria del producto: ")                                 # capturar el tipo de producto
-    price = input("Ingresa el precio del producto: ")                                           # capturar el precio del producto
     stock = int(input("Ingresa el stock inicial del producto, puede ser 0: "))                  # capturar el stock inicial del producto
     reposition = int(input("Punto de reposicion del producto: "))                               # capturar el punto de reposicion del producto
+    price = input("Ingresa el precio del producto: ")                                           # capturar el precio del producto
     new_product.append(code.upper())                                                            # agregar el codigo al nuevo producto
     new_product.append(name)                                                                    # agregar el nombre al nuevo producto
     new_product.append(type_product)                                                            # agregar el tipo de producto al nuevo producto
-    new_product.append(price)                                                                   # agregar el precio al nuevo producto
     new_product.append(stock)                                                                   # agregar el stock al nuevo producto
     new_product.append(reposition)                                                              # agregar el punto de reposicion al nuevo producto
+    new_product.append(price)                                                                   # agregar el precio al nuevo producto
     new_product.append(get_current_time())                                                      # agregar la fecha y hora actual al nuevo producto
     matriz.append(new_product)                                                                  # agregar el nuevo producto a la matriz
     print("El producto " + code + " fue agregado")                                              # mensaje de confirmacion
@@ -131,8 +147,8 @@ def add_new_product(matriz):
     os.system('CLS')                                                                            # limpiar la terminal
     df = pandas.DataFrame(matriz)                                                               # generar la matriz en formato pandas
     df.to_sql('productos', conn, if_exists='replace', index=False)                              # almacenar la matriz de stock en la base de datos
-    ajuste = [code, "Se añadio un producto",                                                   
-              "Added product", get_current_time()]                                              # crear una lista para almacenar los datos del ajuste
+    ajuste = [code, "Se añadió un producto",                                                   
+              "Producto agregado", get_current_time()]                                          # crear una lista para almacenar los datos del ajuste
 
     registros.append(ajuste)                                                                    # agregar el ajuste a la matriz de registros
 
@@ -154,6 +170,8 @@ def delete_product(matriz):
             matriz.pop(i)                                                                       # eliminar el producto de la matriz
             time.sleep(1)                                                                       # esperar 1 segundo
             print("El producto fue eliminado")                                                  # mensaje de confirmacion
+            time.sleep(1.5)                                                                     # esperar 1.5 segundos
+            os.system('CLS')                                                                    # limpiar la terminal
             eliminated = True                                                                   # cambiar la variable a True
 
         except:
@@ -173,12 +191,10 @@ def delete_product(matriz):
 
 
 # fución para modificar el stock de un producto
-def modificate_stock(matriz):
+def modificate_stock(matriz, code_modified):
     time.sleep(0.5)                                                                             # esperar 0.5 segundos
     long = len(matriz)                                                                          # obtener la longitud de la matriz
     os.system("CLS")                                                                            # limpiar la terminal
-    code_modified = (
-        input("Ingresa el codigo del producto que quieres modificar el stock: ")).upper()       # capturar el codigo del producto a modificar
 
     os.system("CLS")                                                                            # limpiar la terminal
     code_founded = False                                                                        # variable para saber si se encontro el codigo
@@ -209,7 +225,7 @@ def modificate_stock(matriz):
         suma = actual_stock + increase                                                          # sumar el stock actual mas el stock a aumentar
         suma = str(suma)                                                                        # convertir el stock a string
         matriz[pos_change][3] = suma                                                            # cambiar el stock del producto
-        matriz[pos_change][5] = get_current_time()                                              # cambiar la fecha de modificacion
+        matriz[pos_change][6] = get_current_time()                                              # cambiar la fecha y hora de modificacion del producto
         df = pandas.DataFrame(matriz)                                                           # generar la matriz en formato pandas
         df.to_sql('productos', conn, if_exists='replace', index=False)                          # almacenar la matriz de stock en la base de datos
         ajuste = "+" + str(increase)
@@ -224,6 +240,7 @@ def modificate_stock(matriz):
 
         print(
             f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")                   # mensaje de confirmacion de modificacion
+        time.sleep(2)                                                                                               # esperar 2 segundos
         os.system("CLS")                                                                                            # limpiar la terminal
     elif egressingress == "2" and code_founded == True or egressingress == "DISMINUIR" and code_founded == True:    # si la opcion es 2 y el codigo fue encontrado
         actual_stock = int(matriz[pos_change][3])                                                                   # obtener el stock actual del producto
@@ -235,9 +252,10 @@ def modificate_stock(matriz):
         resta = actual_stock - decrease                                                         # restar el stock actual menos el stock a disminuir
         resta = str(resta)                                                                      # convertir el stock a string
         matriz[pos_change][3] = resta                                                           # cambiar el stock del producto
-        matriz[pos_change][5] = get_current_time()                                              # cambiar la fecha de modificacion
+        matriz[pos_change][6] = get_current_time()                                              # cambiar la fecha de modificacion
         print(
             f"El stock de {code_modified} ha sido modificado, ahora es: {matriz[pos_change][3]}")                   # mensaje de confirmacion de modificacion
+        time.sleep(2)                                                                                               # esperar 2 segundos
         df = pandas.DataFrame(matriz)                                                                               # generar la matriz en formato pandas
         df.to_sql('productos', conn, if_exists='replace', index=False)                                              # almacenar la matriz de stock en la base de datos
         ajuste = "-" + str(decrease)
@@ -259,7 +277,7 @@ def modificate_stock(matriz):
         ajustar = int(input(f"Cuanto stock se extravio de {code_modified}: "))                  # capturar el stock a ajustar
         motivo = input("Motivo del ajuste: ")                                                   # capturar el motivo del ajuste
         os.system("CLS")                                                                                                                        # limpiar la terminal
-        print("Vamos a modificar el stock restando lo que se perdio, y lo que tiene que volver a enviar al cliente. ¿Es usteded consiente?")    # mensaje de confirmacion
+        print("Vamos a modificar el stock restando lo que se perdio, y lo que tiene que volver a enviar al cliente. ¿Es usted conciente?")      # mensaje de confirmacion
         print(colored("- 1.", "blue", attrs=["bold"]), "Si")                                                                                    # opcion si
         print(colored("- 2.", "blue", attrs=["bold"]), "No")                                                                                    # opcion no
         choose = (input("Ingrese una opción: ")).upper()                                                                                        # capturar la opcion
@@ -270,7 +288,6 @@ def modificate_stock(matriz):
             ajuste = "-"+str(ajustar+ajustar)                                                   # crear string del ajuste                                       
             matriz[pos_change][3] = mod                                                         # cambiar el stock del producto
             os.system("CLS")                                                                    # limpiar la terminal
-            mod = "-" + mod                                                                     # convertir el stock a string
             ajuste = [code_modified, ajuste, motivo, get_current_time()]                        # crear una lista para almacenar los datos del ajuste
 
             registros.append(ajuste)                                                            # agregar el ajuste a la matriz de registros
@@ -335,7 +352,7 @@ def update_product(matriz):
                 print(f"El producto {matriz[i][1]} fue encontrado")                             # mensaje de producto encontrado
                 pos = i                                                                         # obtener la posicion del producto
                 founded = True                                                                  # cambiar la variable a True
-                time.sleep(1)                                                                   # esperar 1 segundo
+                time.sleep(2)                                                                   # esperar 2 segundos
                 os.system("CLS")                                                                # limpiar la terminal
 
     except:
@@ -358,45 +375,57 @@ def update_product(matriz):
         if choose == "1":                                                                       # si la opcion es 1
             name = input("Ingrese el nuevo nombre: ")                                           # capturar el nuevo nombre
             matriz[pos][1] = name                                                               # cambiar el nombre del producto
+            matriz[pos][6] = get_current_time()                                                 # cambiar la fecha y hora de modificacion del producto
             print(" ")
             print("El nombre del producto fue modificado")                                      # mensaje de nombre modificado
+            time.sleep(1.5)                                                                     # esperar 1.5 segundos
             print(" ")
-            update_product(matriz)                                                              # llamar a la funcion update product
 
         elif choose == "2":                                                                     # si la opcion es 2
             price = input("Ingrese el nuevo precio: ")                                          # capturar el nuevo precio
-            matriz[pos][6] = price                                                              # cambiar el precio del producto
+            matriz[pos][5] = price                                                              # cambiar el precio del producto
+            matriz[pos][6] = get_current_time()                                                 # cambiar la fecha y hora de modificacion del producto
             print(" ")
             print("El precio del producto fue modificado")                                      # mensaje de precio modificado
+            time.sleep(1.5)                                                                     # esperar 1.5 segundos
             print(" ")
-            update_product(matriz)                                                              # llamar a la funcion update product
+
         elif choose == "3":                                                                     # si la opcion es 3
-            modificate_stock(matriz)                                                            # llamar a la funcion modificar stock
+            modificate_stock(matriz, code)                                                            # llamar a la funcion modificar stock
         elif choose == "4":                                                                     # si la opcion es 4
             code = input("Ingrese el nuevo codigo del producto: ")                              # capturar el nuevo codigo
             matriz[pos][0] = code                                                               # cambiar el codigo del producto
+            matriz[pos][6] = get_current_time()                                                 # cambiar la fecha y hora de modificacion del producto
             print(" ")
             print("El codigo del producto fue modificado")                                      # mensaje de codigo modificado
+            time.sleep(1.5)                                                                     # esperar 1.5 segundos
             print(" ")
         elif choose == "5":                                                                     # si la opcion es 5
             category = input("Ingrese la nueva categoria: ")                                    # capturar la nueva categoria
             matriz[pos][2] = category                                                           # cambiar la categoria del producto
+            matriz[pos][6] = get_current_time()                                                 # cambiar la fecha y hora de modificacion del producto
             print(" ")
             print("La categoria del producto fue modificada")                                   # mensaje de categoria modificada
+            time.sleep(1.5)                                                                     # esperar 1.5 segundos
             print(" ")
-            update_product(matriz)                                                              # llamar a la funcion update product
+
         elif choose == "6":                                                                     # si la opcion es 6
             repos = input("Ingrese el nuevo punto de reposicion: ")                             # capturar el nuevo punto de reposicion
             matriz[pos][4] = repos                                                              # cambiar el punto de reposicion del producto
+            matriz[pos][6] = get_current_time()                                                 # cambiar la fecha y hora de modificacion del producto
             print(" ")
             print("El punto de reposicion del producto fue modificado")                         # mensaje de punto de reposicion modificado
+            time.sleep(1.5)                                                                     # esperar 1.5 segundos
             print(" ")
         os.system("CLS")                                                                        # limpiar la terminal
     else:                                                                                       # si el codigo no fue encontrado
         print("El codigo no se encontro")                                                       # mensaje de codigo no encontrado
         time.sleep(1.5)                                                                         # esperar 1.5 segundos
         os.system("CLS")                                                                        # limpiar la terminal
-        update_product(matriz)                                                                  # llamar a la funcion update product
+        update_product(matriz)
+    
+    df = pandas.DataFrame(matriz)                                                               # convertir la matriz en un dataframe
+    df.to_sql('productos', conn, if_exists='replace', index=False)                              # guardar los datos en la base de datos
 
 
 """-----------------------------------------------------------------------------------------------------------------------"""
@@ -412,7 +441,7 @@ print(colored("Hoy es " + now, "white"))                                        
 print()
 o = "INICIAR"                                                                                   # opcion iniciar
 
-while o != "CERRAR":                                                                            # mientras la opcion no sea cerrar
+while o != "7":                                                                                 # mientras la opcion no sea cerrar
 
     print(colored("--- Menú Principal ---", "blue", attrs=["bold"]))                            # imprimir el menu principal
     print(colored("- 1.", "blue", attrs=["bold"]), "Imprimir Data")                             # opcion 1
@@ -453,4 +482,4 @@ while o != "CERRAR":                                                            
         os.system("CLS")                                                                        # limpiar la terminal
 
 """-----------------------------------------------------------------------------------------------------------------------"""
-conn.close()                                                                                    # cerrar la conexion con la base de datos
+conn.close()                                                                     
