@@ -146,9 +146,12 @@ def alert(matriz):
         print("-----------------------------")
         print(" ")
         print(to_repos)                                                                         # imprimir la matriz de productos a reponer
+        print(" ")
         a = input("Ingrese una tecla cuando desee volver al menu principal: ")                  # volver al menu principal
+        os.system('CLS')                                                                        # limpiar la terminal
     else:
         print("No hay ningun codigo a reponer por el momento.")                                 # mensaje de error
+        os.system('CLS')                                                                        # limpiar la terminal
 
 
 # funcion para agregar un nuevo producto
