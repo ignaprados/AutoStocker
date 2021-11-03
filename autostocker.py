@@ -135,8 +135,8 @@ def alert(matriz):
     for i in range(len(matriz)):                                                                                                # recorrer la matriz
         if int(matriz[i][3]) <= int(matriz[i][4]):                                                                              # si el stock es menor o igual al reposicion
             to_repos.append(matriz[i])                                                                                          # agregar el producto a la lista
-            to_repos = pandas.DataFrame(to_repos, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])   # generar la matriz en formato pandas
             codes_to_repos.append(matriz[i][0])                                                                                 # agregar el codigo del producto a la lista
+    to_repos = pandas.DataFrame(to_repos, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])           # generar la matriz en formato pandas
                
     if len(codes_to_repos) > 0:                                                                 # si hay productos a reponer
         print("Los codigos a reponer son: ")                                                    # mensaje de los codigos a reponer
@@ -171,12 +171,12 @@ def add_new_product(matriz):
     new_product.append(price)                                                                   # agregar el precio al nuevo producto
     new_product.append(get_current_time())                                                      # agregar la fecha y hora actual al nuevo producto
     matriz.append(new_product)                                                                  # agregar el nuevo producto a la matriz
-    print("El producto " + code + " fue agregado")                                              # mensaje de confirmacion
+    print("El producto " + code.upper() + " fue agregado")                                              # mensaje de confirmacion
     time.sleep(2)                                                                               # esperar 2 segundos
     os.system('CLS')                                                                            # limpiar la terminal
     df = pandas.DataFrame(matriz)                                                               # generar la matriz en formato pandas
     df.to_sql('productos', conn, if_exists='replace', index=False)                              # almacenar la matriz de stock en la base de datos
-    ajuste = [code, "Se añadió un producto",                                                   
+    ajuste = [code.upper(), "Se añadió un producto",                                                   
               "Producto agregado", get_current_time()]                                          # crear una lista para almacenar los datos del ajuste
 
     registros.append(ajuste)                                                                    # agregar el ajuste a la matriz de registros
@@ -470,7 +470,7 @@ print(colored("Hoy es " + now, "white"))                                        
 print()
 o = "INICIAR"                                                                                   # opcion iniciar
 
-while o != "7":                                                                                 # mientras la opcion no sea cerrar
+while o != "9":                                                                                 # mientras la opcion no sea cerrar
 
     print(colored("--- Menú Principal ---", "blue", attrs=["bold"]))                            # imprimir el menu principal
     print(colored("- 1.", "blue", attrs=["bold"]), "Imprimir Data")                             # opcion 1
@@ -480,11 +480,11 @@ while o != "7":                                                                 
     print(colored("- 5.", "blue", attrs=["bold"]), "Filtrar por categoria")                     # opcion 5
     print(colored("- 6.", "blue", attrs=["bold"]),
           "Consultar stock del producto")                                                       # opcion 6
-    print(colored("- 7.", "blue", attrs=["bold"]), "Cerrar")                                    # opcion 7
+    print(colored("- 7.", "blue", attrs=["bold"]), "Alertas de reposición")                     # opcion 7
     print(colored("- 8.", "blue", attrs=["bold"]), "Imprimir registros")                        # opcion 8
-    print(colored("- 9.", "blue", attrs=["bold"]), "Alertas de reposición") 
+    print(colored("- 9.", "blue", attrs=["bold"]), "Cerrar")                                    # opcion 9
     o = (input("> Ingrese una opcion: ")).upper()                                               # capturar la opcion
-    if o == "CERRAR" or o == "7":                                                               # si la opcion es cerrar o 7
+    if o == "CERRAR" or o == "9":                                                               # si la opcion es cerrar o 7
         print("Guardando datos en la base de datos...")                                         # mensaje de guardando datos
         df = pandas.DataFrame(matriz)                                                           # convertir la matriz en un dataframe
         df.to_sql('productos', conn, if_exists='replace', index=False)                          # guardar los datos en la base de datos
@@ -504,10 +504,10 @@ while o != "7":                                                                 
         product_type(matriz)                                                                    # llamar a la funcion filtrar categoria
     elif o == "CONSULTAR STOCK" or o == "6":                                                    # si la opcion es consultar stock o 6
         product_stock(matriz)                                                                   # llamar a la funcion consultar stock
+    elif o == "7":                                                                              # si la opcion es alert o 7
+        alert(matriz)                                                                           # llamar a la funcion alertas de reposicion
     elif o == "8":                                                                              # si la opcion es 8
         print_registros(registros)                                                              # llamar a la funcion imprimir registros
-    elif o == "9":
-        alert(matriz) 
     else:                                                                                       # si la opcion no es ninguna de las anteriores
         print("No has ingresado un comando valido")                                             # mensaje de comando invalido 
         time.sleep(1)                                                                           # esperar 1 segundo
