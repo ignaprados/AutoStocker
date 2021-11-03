@@ -124,6 +124,30 @@ def get_current_time():
     now = time_update.strftime("%d/%m/%Y %H:%M:%S")                                             # formatear la fecha y hora actual
     return now                                                                                  # retornar fecha
 
+def alert(matriz):
+    time.sleep(0.2)
+    os.system("CLS")
+    to_repos = list()
+    codes_to_repos = list()
+    for i in range(len(matriz)):
+        if int(matriz[i][3]) <= int(matriz[i][4]):
+            to_repos.append(matriz[i])
+            to_repos = pandas.DataFrame(to_repos, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])
+            codes_to_repos.append(matriz[i][0])
+            
+        
+    
+    if len(codes_to_repos) > 0:
+        print("Los codigos a reponer son: ")
+        for i in codes_to_repos:
+            print(i, end=" ")
+        print("")
+        print("-----------------------------")
+        print(" ")
+        print(to_repos)
+        a = input("Ingrese una tecla cuando desee volver al menu principal: ")
+    else:
+        print("No hay ningun codigo a reponer por el momento.")
 
 # funcion para agregar un nuevo producto
 def add_new_product(matriz):
@@ -453,6 +477,7 @@ while o != "7":                                                                 
           "Consultar stock del producto")                                                       # opcion 6
     print(colored("- 7.", "blue", attrs=["bold"]), "Cerrar")                                    # opcion 7
     print(colored("- 8.", "blue", attrs=["bold"]), "Imprimir registros")                        # opcion 8
+    print(colored("- 9.", "blue", attrs=["bold"]), "Alertas de reposición") 
     o = (input("> Ingrese una opcion: ")).upper()                                               # capturar la opcion
     if o == "CERRAR" or o == "7":                                                               # si la opcion es cerrar o 7
         print("Guardando datos en la base de datos...")                                         # mensaje de guardando datos
@@ -476,6 +501,8 @@ while o != "7":                                                                 
         product_stock(matriz)                                                                   # llamar a la funcion consultar stock
     elif o == "8":                                                                              # si la opcion es 8
         print_registros(registros)                                                              # llamar a la funcion imprimir registros
+    elif o == "9":
+        alert(matriz) 
     else:                                                                                       # si la opcion no es ninguna de las anteriores
         print("No has ingresado un comando valido")                                             # mensaje de comando invalido 
         time.sleep(1)                                                                           # esperar 1 segundo
