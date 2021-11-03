@@ -15,16 +15,15 @@ def add_new_product(matriz):
     new_product.append(price)                                                                   # agregar el precio al nuevo producto
     new_product.append(get_current_time())                                                      # agregar la fecha y hora actual al nuevo producto
     matriz.append(new_product)                                                                  # agregar el nuevo producto a la matriz
-    print("El producto " + code + " fue agregado")                                              # mensaje de confirmacion
+    print("El producto " + code.upper() + " fue agregado")                                              # mensaje de confirmacion
     time.sleep(2)                                                                               # esperar 2 segundos
     os.system('CLS')                                                                            # limpiar la terminal
     df = pandas.DataFrame(matriz)                                                               # generar la matriz en formato pandas
     df.to_sql('productos', conn, if_exists='replace', index=False)                              # almacenar la matriz de stock en la base de datos
-    ajuste = [code, "Se añadió un producto",                                                   
+    ajuste = [code.upper(), "Se añadió un producto",                                                   
               "Producto agregado", get_current_time()]                                          # crear una lista para almacenar los datos del ajuste
 
     registros.append(ajuste)                                                                    # agregar el ajuste a la matriz de registros
 
     df = pandas.DataFrame(registros)                                                            # generar la matriz en formato pandas
     df.to_sql('registros', conn, if_exists='replace', index=False)                              # almacenar la matriz de registros en la base de datos
-
