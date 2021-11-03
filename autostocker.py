@@ -119,35 +119,37 @@ def product_type(matriz):
             os.system("CLS")                                                                    # limpiar la terminal                                                                               
 
 
+# funcion para obtener el tiempo actual
 def get_current_time():
     time_update = datetime.now()                                                                # obtener la fecha y hora actual
     now = time_update.strftime("%d/%m/%Y %H:%M:%S")                                             # formatear la fecha y hora actual
     return now                                                                                  # retornar fecha
 
+
+# funcion para alertar si hay que reponer un producto
 def alert(matriz):
-    time.sleep(0.2)
-    os.system("CLS")
-    to_repos = list()
-    codes_to_repos = list()
-    for i in range(len(matriz)):
-        if int(matriz[i][3]) <= int(matriz[i][4]):
-            to_repos.append(matriz[i])
-            to_repos = pandas.DataFrame(to_repos, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])
-            codes_to_repos.append(matriz[i][0])
-            
-        
-    
-    if len(codes_to_repos) > 0:
-        print("Los codigos a reponer son: ")
-        for i in codes_to_repos:
-            print(i, end=" ")
+    time.sleep(0.2)                                                                                                             # esperar 0.2 segundos
+    os.system("CLS")                                                                                                            # limpiar la terminal                   
+    to_repos = list()                                                                                                           # crear una lista para los productos a reponer
+    codes_to_repos = list()                                                                                                     # crear una lista para los codigos de los productos a reponer
+    for i in range(len(matriz)):                                                                                                # recorrer la matriz
+        if int(matriz[i][3]) <= int(matriz[i][4]):                                                                              # si el stock es menor o igual al reposicion
+            to_repos.append(matriz[i])                                                                                          # agregar el producto a la lista
+            to_repos = pandas.DataFrame(to_repos, columns=["code", "name", "type", "stock", "repos", "price", "last_update"])   # generar la matriz en formato pandas
+            codes_to_repos.append(matriz[i][0])                                                                                 # agregar el codigo del producto a la lista
+               
+    if len(codes_to_repos) > 0:                                                                 # si hay productos a reponer
+        print("Los codigos a reponer son: ")                                                    # mensaje de los codigos a reponer
+        for i in codes_to_repos:                                                                # recorrer la lista de codigos a reponer
+            print(i, end=" ")                                                                   # imprimir los codigos a reponer
         print("")
         print("-----------------------------")
         print(" ")
-        print(to_repos)
-        a = input("Ingrese una tecla cuando desee volver al menu principal: ")
+        print(to_repos)                                                                         # imprimir la matriz de productos a reponer
+        a = input("Ingrese una tecla cuando desee volver al menu principal: ")                  # volver al menu principal
     else:
-        print("No hay ningun codigo a reponer por el momento.")
+        print("No hay ningun codigo a reponer por el momento.")                                 # mensaje de error
+
 
 # funcion para agregar un nuevo producto
 def add_new_product(matriz):
