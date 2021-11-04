@@ -26,7 +26,7 @@
 
 ### 1. Introduccion:
 Autostocker es un programa basado en consola que utiliza una base de datos SQL. Este programa tiene una interfaz sencilla, rápida e intuitiva para el manejo de la información. Lo que buscamos es que el potencial cliente que decida adquirir este producto pueda tener un fácil manejo del sistema con funciones enfocadas a sus necesidades, y así obtener un crecimiento exponencial dentro de su empresa/negocio.
->[Ver Repositiorio en GitHub](https://github.com/IgnacioPrados/AutoStocker)
+>[Ver Documentación en la web](https://autostocker.vercel.app)
 
 
 
